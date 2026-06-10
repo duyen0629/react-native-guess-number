@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Text, FlatList } from "react-native";
 import Title from "../components/ui/Title";
 import { useState, useEffect } from "react";
 import NumberContainer from "../components/game/NumberContainer";
@@ -21,6 +21,7 @@ let maxBoundary = 100;
 function GameScreen({ userNumber, onGameOver }) {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [rounds, setRounds] = useState([initialGuess]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
@@ -56,6 +57,7 @@ function GameScreen({ userNumber, onGameOver }) {
       currentGuess,
     );
     setCurrentGuess(newRndNum);
+    setRounds((prevRounds) => [newRndNum, ...prevRounds]);
   }
   return (
     <View style={styles.container}>
@@ -86,6 +88,13 @@ function GameScreen({ userNumber, onGameOver }) {
           </View>
         </View>
       </Card>
+      <View>
+        <FlatList
+          data={rounds}
+          renderItem={(itemData) => <Text>#{itemData.item}</Text>}
+          keyExtractor={(item) => item}
+        />
+      </View>
     </View>
   );
 }
